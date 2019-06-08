@@ -1,0 +1,5 @@
+minisom
+numpy
+scikit-image
+matplotlib
+jupyter
