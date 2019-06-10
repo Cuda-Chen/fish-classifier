@@ -31,14 +31,6 @@ starting_weights = som.get_weights().copy()  # saving the starting weights
 # and set maximum iteration to 500
 som.train_random(pixels, 500, verbose=True)
 
-print('quantization...')
-qnt = som.quantization(pixels)  # quantize each pixels of the image
-print('building new image...')
-clustered = np.zeros(img.shape)
-for i, q in enumerate(qnt):  # place the quantized values into a new image
-    clustered[np.unravel_index(i, dims=(img.shape[0], img.shape[1]))] = q
-print('done.')
-
 # print starting and learned weights
 # each row of the list represents the pixel value (color) of certain element
 ending_weights = som.get_weights()
