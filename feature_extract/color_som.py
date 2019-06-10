@@ -1,9 +1,16 @@
 from skimage import io
 from minisom import MiniSom
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('input_file', type=str, help='input image path')
+parser.add_argument('output_file', type=str, help='output csv path')
+args = parser.parse_args()
 
 # read input image
-img = io.imread("../data/003_0.bmp")
+#img = io.imread("../data/003_0.bmp")
+img = io.imread(args.input_file)
 
 # reshape the pixels matrix and nomalize it
 # (height, width, channel) -> (height * width, channel)
@@ -43,4 +50,4 @@ print(ending_weights)
 # output learned color is csv
 a = np.asarray(ending_weights)
 a = a.reshape(1, 3 * 4 * 4)
-np.savetxt("foo.csv", a, delimiter=",", fmt='%1.6f')
+np.savetxt(args.output_file, a, delimiter=",", fmt='%1.6f')
