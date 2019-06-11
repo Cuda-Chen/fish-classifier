@@ -6,12 +6,12 @@ from __future__ import print_function
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-from keras.optimizers import Adam
+from keras.optimizers import Adam, SGD
 
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
-batch_size = 32
+batch_size = 128
 num_classes = 42 # 41 + 1
 classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
@@ -25,6 +25,7 @@ class_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
     '41', '42']
 epochs = 1000
 learning_rate = 1e-5
+sgb = SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
 
 lbp_train = pd.read_csv('../LBP_feature_train.csv')
 lbp_val = pd.read_csv('../LBP_feature_val.csv')
@@ -59,11 +60,11 @@ y_test = pd.DataFrame(onehot_val)
 # be sure of input layer!
 model = Sequential()
 model.add(Dense(2048, activation='relu', input_shape=(58,)))
-#model.add(Dropout(0.5))
+model.add(Dropout(0.5))
 model.add(Dense(2048, activation='relu'))
-#model.add(Dropout(0.5))
-#model.add(Dense(2048, activation='relu'))
-#model.add(Dropout(0.5))
+model.add(Dropout(0.5))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
 model.summary()
