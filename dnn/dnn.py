@@ -8,6 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import Adam
 
+batch = 32
 num_classes = 42 # 41 + 1
 epochs = 100
 
@@ -35,6 +36,7 @@ model.compile(loss='categorical_crossentropy',
     metrics=['accuracy'])
 
 history = model.fit(x_train, y_train,
+    batch=32,
     epochs=epochs,
     verbose=1,
     validation_data=(x_test, y_test))
