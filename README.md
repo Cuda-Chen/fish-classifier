@@ -9,5 +9,6 @@
 # Conda Package
 ```
 conda install -c conda-forge tensorflow
-conda install -c conda-forge keras
+conda install -c conda-forge tensorflow-gpu # alternative
+conda install keras
 ```

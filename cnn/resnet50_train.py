@@ -4,13 +4,14 @@ from tensorflow.python.keras.layers import Flatten, Dense, Dropout
 from tensorflow.python.keras.applications.resnet50 import ResNet50
 from tensorflow.python.keras.optimizers import Adam
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
+from fishconfig import config
 
-DATASET_PATH = '/home/ccc/miat_fish_cropped' # dataset path
-IMAGE_SIZE = (512, 512) # wrap the input image size
-NUM_CLASSES = 42
-BATCH_SIZE = 8
-FREEZE_LAYERS = 2
-NUM_EPOCHS = 50
+DATASET_PATH = config.DATASET_PATH # dataset path
+IMAGE_SIZE = config.IMAGE_SIZE # wrap the input image size
+NUM_CLASSES = config.NUM_CLASSES
+BATCH_SIZE = config.BATCH_SIZE
+FREEZE_LAYERS = config.FREEZE_LAYERS
+NUM_EPOCHS = config.NUM_EPOCHS
 WEIGHTS_FINAL = 'model-resnet50-final.h5'
 
 # data agumentation

@@ -3,6 +3,9 @@ from tensorflow.python.keras.models import load_model
 from tensorflow.python.keras.preprocessing import image
 import sys
 import numpy as np
+from fishconfig import config
+
+IMAGE_SIZE = config.IMAGE_SIZE
 
 files = sys.argv[1:]
 
@@ -16,7 +19,7 @@ cls_list = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
 
 # make prediction
 for f in files:
-    img = image.load_img(f, target_size=(512, 512))
+    img = image.load_img(f, target_size=IMAGE_SIZE)
     if img is None:
         continue
     x = image.img_to_array(img)
