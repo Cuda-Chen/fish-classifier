@@ -10,6 +10,8 @@ classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 
 lbp_train = pd.read_csv('../LBP_feature_train.csv')
 lbp_val = pd.read_csv('../LBP_feature_val.csv')
+fd_train = pd.read_csv('../fd_feature_train.csv')
+fd_val = pd.read_csv('../fd_feature_val.csv')
 color_som_train = pd.read_csv('../color_som_train.csv')
 color_som_val = pd.read_csv('../color_som_val.csv')
 train_label = pd.read_csv('../train_label.csv')
@@ -17,8 +19,8 @@ val_label = pd.read_csv('../val_label.csv')
 
 # get your training and testing data here
 # and to make sure to reshape and normalize!
-x_train = pd.concat([lbp_train, color_som_train], axis=1).values
-x_test = pd.concat([lbp_val, color_som_val], axis=1).values
+x_train = pd.concat([lbp_train, fd_train, color_som_train], axis=1).values
+x_test = pd.concat([lbp_val, fd_val, color_som_val], axis=1).values
 
 # convert class vectors to binary class matrices (one-hot encoding)
 # there are some missing class!
