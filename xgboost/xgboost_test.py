@@ -45,9 +45,9 @@ y_test = pd.DataFrame(onehot_val)
 y_train = train_label['class_no'].values
 y_test = val_label['class_no'].values
 
-cv_params = {'n_estimators': [600, 700, 800, 900, 1000]}
-other_params = {'learning_rate': 0.1, 'n_estimators': 800, 'max_depth': 5, 'min_child_weight': 1, 'seed': 0,
-                    'subsample': 0.8, 'colsample_bytree': 0.8, 'gamma': 0, 'reg_alpha': 0, 'reg_lambda': 1}
+cv_params = {'learning_rate': [0.01, 0.05, 0.07, 0.1, 0.2]}
+other_params = {'learning_rate': 0.1, 'n_estimators': 275, 'max_depth': 6, 'min_child_weight': 5, 'seed': 0,
+                    'subsample': 0.6, 'colsample_bytree': 0.8, 'gamma': 0.1, 'reg_alpha': 0.008, 'reg_lambda': 0.1}
 
 '''
 xgbc = XGBClassifier()
