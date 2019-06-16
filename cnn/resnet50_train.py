@@ -15,6 +15,7 @@ NUM_EPOCHS = config.NUM_EPOCHS
 WEIGHTS_FINAL = 'model-resnet50-final.h5'
 
 # data agumentation
+'''
 train_datagen = ImageDataGenerator(rotation_range=40,
                                    width_shift_range=0.2,
                                    height_shift_range=0.2,
@@ -23,6 +24,8 @@ train_datagen = ImageDataGenerator(rotation_range=40,
                                    channel_shift_range=10,
                                    horizontal_flip=True,
                                    fill_mode='nearest')
+'''
+train_datagen = ImageDataGenerator()
 train_batches = train_datagen.flow_from_directory(DATASET_PATH + '/train',
                                                   target_size=IMAGE_SIZE,
                                                   interpolation='bicubic',

@@ -1,6 +1,7 @@
 
 import pandas as pd
 from xgboost import XGBClassifier
+from sklearn.model_selection import GridSearchCV
 
 classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
@@ -44,8 +45,21 @@ y_test = pd.DataFrame(onehot_val)
 y_train = train_label['class_no'].values
 y_test = val_label['class_no'].values
 
+cv_params = {'n_estimators': [600, 700, 800, 900, 1000]}
+other_params = {'learning_rate': 0.1, 'n_estimators': 800, 'max_depth': 5, 'min_child_weight': 1, 'seed': 0,
+                    'subsample': 0.8, 'colsample_bytree': 0.8, 'gamma': 0, 'reg_alpha': 0, 'reg_lambda': 1}
+
+'''
 xgbc = XGBClassifier()
 
 xgbc.fit(x_train, y_train)
 
 print('The accuracy of eXtreme Gradient Boosting Classifier on testing set:', xgbc.score(x_test, y_test))
+'''
+model = XGBClassifier()
+optimized_GBM = GridSearchCV(estimator=model, param_grid=cv_params, scoring='accuracy', cv=5, verbose=1, n_jobs=8)
+optimized_GBM.fit(x_train, y_train)
+evaluate_result = optimized_GBM.cv_results_['mean_test_score']
+print('result of each iteration:{0}'.format(evaluate_result))
+print('best params:{0}'.format(optimized_GBM.best_params_))
+print('test score:{0}'.format(optimized_GBM.best_score_))
