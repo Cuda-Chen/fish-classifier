@@ -38,3 +38,8 @@ net = load_model('my_dnn.h5')
 score = net.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+pred = net.predict(x_test)[0]
+top_inds = pred.argsort()[::-1][:5]
+for i in top_inds:
+    print('    {:.3f}  {}'.format(pred[i], cls_list[i]))
