@@ -12,19 +12,19 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 batch_size = 32
-num_classes = 42 # 41 + 1
+num_classes = 41 # 41
 input_size = 122 # 10 + 16 * 3 + 64
 classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
            31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-           41, 42]
+           41]
 class_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 
     '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
     '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
     '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
-    '41', '42']
-epochs = 1000
+    '41']
+epochs = 100
 learning_rate = 1e-5
 sgb = SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
 
