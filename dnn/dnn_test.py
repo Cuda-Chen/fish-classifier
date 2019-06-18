@@ -18,6 +18,11 @@ class_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
     '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
     '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
     '41']
+classList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+    21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+    31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+    41]
 
 lbp_test = pd.read_csv('../LBP_feature_val.csv')
 fd_test = pd.read_csv('../fd_feature_val.csv')
@@ -31,6 +36,8 @@ test_label = pd.read_csv('../val_label.csv')
 
 x_test = pd.concat([lbp_test, fd_test, color_som_test], axis=1).values
 test_label_list = test_label['class_no'].tolist()
+test_label_nparr = test_label['class_no'].values
+print(test_label_nparr.shape)
 onehot_test = []
 for value in test_label_list:
     class_id = [0 for _ in range(len(class_list))]
@@ -43,6 +50,12 @@ net = load_model('my_dnn.h5')
 score = net.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
+
+y_pred_class = net.predict_classes(x_test)
+print(y_pred_class.shape)
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(test_label_nparr, y_pred_class, labels=classList)
+print(cm)
 
 '''
 pred = net.predict(x_test)[0]
