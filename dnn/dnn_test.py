@@ -52,10 +52,15 @@ print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
 y_pred_class = net.predict_classes(x_test)
-print(y_pred_class.shape)
+#print(y_pred_class.shape)
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(test_label_nparr, y_pred_class, labels=classList)
-print(cm)
+#print(cm)
+cm_df = pd.DataFrame(cm, index=classList, columns=classList)
+#cm_df = pd.crosstab(test_label_nparr, y_pred_class, rownames=['label'], colnames=['predict'])
+#cm_df.index = np.arange(1, len(cm_df) + 1)
+print(cm_df)
+cm_df.to_csv('confusionMatrix.csv')
 
 '''
 pred = net.predict(x_test)[0]
