@@ -5,11 +5,13 @@ from __future__ import print_function
 
 import keras
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from keras.layers import Dense, Dropout, PReLU
 from keras.optimizers import Adam, SGD
+from keras.callbacks import EarlyStopping
 
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
 batch_size = 32
 num_classes = 41 # 41
@@ -24,9 +26,10 @@ class_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
     '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
     '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
     '41']
-epochs = 100
+epochs = 5000
 learning_rate = 1e-5
 sgb = SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
+early_stopping = EarlyStopping(monitor='val_loss', patience=100, verbose=2)
 
 lbp_train = pd.read_csv('../LBP_feature_train.csv')
 lbp_val = pd.read_csv('../LBP_feature_val.csv')
@@ -66,13 +69,22 @@ y_train = train_label.values
 y_test = val_label.values
 '''
 
+#X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=0)
+X_train = x_train
+X_val = x_test
+Y_train = y_train
+Y_val = y_test
+
 # be sure of input layer!
 model = Sequential()
 model.add(Dense(8192, activation='relu', input_shape=(input_size,)))
+#model.add(PReLU())
 model.add(Dropout(0.5))
 model.add(Dense(8192, activation='relu'))
+#model.add(PReLU())
 model.add(Dropout(0.5))
 model.add(Dense(2048, activation='relu'))
+#model.add(PReLU())
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
@@ -82,15 +94,16 @@ model.compile(loss='categorical_crossentropy',
     optimizer=Adam(lr=learning_rate),
     metrics=['accuracy'])
 
-history = model.fit(x_train, y_train,
+history = model.fit(X_train, Y_train,
     batch_size=batch_size,
     epochs=epochs,
-    verbose=1,
-    validation_data=(x_test, y_test))
+    verbose=2,
+    validation_data=(X_val, Y_val),
+    callbacks=[early_stopping])
 
 print('test before save')
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-model.save('my_dnn.h5')
+#model.save('my_dnn.h5')
