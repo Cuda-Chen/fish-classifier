@@ -42,4 +42,5 @@ print(ending_weights)
 # output learned color is csv
 a = np.asarray(ending_weights)
 a = a.reshape(1, 3 * 4 * 4)
-np.savetxt(args.output_file, a, delimiter=",", fmt='%1.6f')
+a_scaled = (a - a.min()) / (a.max() - a.min())
+np.savetxt(args.output_file, a_scaled, delimiter=",", fmt='%1.6f')
