@@ -131,4 +131,14 @@ dmypy.json
 
 # do not save the output
 *.csv
+!LBP_feature_train.csv
+!LBP_feature_val.csv
+!color_som_train.csv
+!color_som_val.csv
+!fd_feature_train.csv
+!fd_feature_val.csv
+!train_label.csv
+!val_label.csv
 *.h5
+*.svg
+*.png
