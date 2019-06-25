@@ -13,6 +13,10 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.rc('font',family='Times New Roman')
+from numpy.random import seed
+seed(1333)
 
 batch_size = 32
 num_classes = 41 # 41
@@ -27,7 +31,7 @@ class_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
     '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
     '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
     '41']
-epochs = 5000
+epochs = 2000
 learning_rate = 1e-5
 sgb = SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
 early_stopping = EarlyStopping(monitor='val_loss', patience=100, verbose=2)
@@ -50,8 +54,8 @@ color_som_val_norm = (color_som_val - color_som_val.min()) / (color_som_val.max(
 fd_val_norm = (fd_val - fd_val.min()) / (fd_val.max() - fd_val.min())
 
 # fill NaN
-fd_train_norm = fd_train_norm.fillna(0)
-fd_val_norm = fd_val_norm.fillna(0)
+fd_train_norm = fd_train_norm.fillna(1)
+fd_val_norm = fd_val_norm.fillna(1)
 
 # get your training and testing data here
 # and to make sure to reshape and normalize!
@@ -121,8 +125,11 @@ plt.title('Model accuracy')
 plt.ylabel('Accuracy')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Test'], loc='upper left')
+plt.grid(linestyle='dotted')
 #plt.show()
 plt.savefig('accuracy.svg', format='svg')
+
+plt.clf()
 
 # plot training & validation loss values
 plt.plot(history.history['loss'])
@@ -131,6 +138,7 @@ plt.title('Model loss')
 plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Test'], loc='upper left')
+plt.grid(linestyle='dotted')
 #plt.show()
 plt.savefig('loss.svg', format='svg')
 
