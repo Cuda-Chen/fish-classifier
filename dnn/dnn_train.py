@@ -41,6 +41,18 @@ color_som_val = pd.read_csv('../color_som_val.csv')
 train_label = pd.read_csv('../train_label.csv')
 val_label = pd.read_csv('../val_label.csv')
 
+# normalize each feature
+lbp_train_norm = (lbp_train - lbp_train.min()) / (lbp_train.max() - lbp_train.min())
+color_som_train_norm = (color_som_train - color_som_train.min()) / (color_som_train.max() - color_som_train.min())
+fd_train_norm = (fd_train - fd_train.min()) / (fd_train.max() - fd_train.min())
+lbp_val_norm = (lbp_val - lbp_val.min()) / (lbp_val.max() - lbp_val.min())
+color_som_val_norm = (color_som_val - color_som_val.min()) / (color_som_val.max() - color_som_val.min())
+fd_val_norm = (fd_val - fd_val.min()) / (fd_val.max() - fd_val.min())
+
+# fill NaN
+fd_train_norm = fd_train_norm.fillna(0)
+fd_val_norm = fd_val_norm.fillna(0)
+
 # get your training and testing data here
 # and to make sure to reshape and normalize!
 x_train = pd.concat([lbp_train, fd_train, color_som_train], axis=1).values
@@ -109,7 +121,8 @@ plt.title('Model accuracy')
 plt.ylabel('Accuracy')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Test'], loc='upper left')
-plt.show()
+#plt.show()
+plt.savefig('accuracy.svg', format='svg')
 
 # plot training & validation loss values
 plt.plot(history.history['loss'])
@@ -118,7 +131,8 @@ plt.title('Model loss')
 plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Test'], loc='upper left')
-plt.show()
+#plt.show()
+plt.savefig('loss.svg', format='svg')
 
 print('test before save')
 score = model.evaluate(x_test, y_test, verbose=0)
