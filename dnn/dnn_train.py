@@ -20,7 +20,8 @@ seed(1333)
 
 batch_size = 32
 num_classes = 41 # 41
-input_size = 121 # 10 + 16 * 3 + (64 - 1)
+input_size = 122 # 10 + 16 * 3 + 64
+#input_size = 121 # 10 + 16 * 3 + (64 - 1)
 classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
@@ -46,21 +47,29 @@ train_label = pd.read_csv('../train_label.csv')
 val_label = pd.read_csv('../val_label.csv')
 
 # normalize each feature
+'''
 lbp_train_norm = (lbp_train - lbp_train.min()) / (lbp_train.max() - lbp_train.min())
 color_som_train_norm = (color_som_train - color_som_train.min()) / (color_som_train.max() - color_som_train.min())
 fd_train_norm = (fd_train - fd_train.min()) / (fd_train.max() - fd_train.min())
 lbp_val_norm = (lbp_val - lbp_val.min()) / (lbp_val.max() - lbp_val.min())
 color_som_val_norm = (color_som_val - color_som_val.min()) / (color_som_val.max() - color_som_val.min())
 fd_val_norm = (fd_val - fd_val.min()) / (fd_val.max() - fd_val.min())
+'''
+
+# fill NaN value with 1
+#fd_train_norm = fd_train_norm.fillna(0)
+#fd_val_norm = fd_val_norm.fillna(0)
 
 # drop fd_0 column because it is NaN
-fd_train_norm = fd_train_norm.drop(columns="fd_0")
-fd_val_norm = fd_val_norm.drop(columns="fd_0")
+#fd_train_norm = fd_train_norm.drop(columns="fd_0")
+#fd_val_norm = fd_val_norm.drop(columns="fd_0")
 
 # get your training and testing data here
 # and to make sure to reshape and normalize!
-x_train = pd.concat([lbp_train_norm, fd_train_norm, color_som_train_norm], axis=1).values
-x_test = pd.concat([lbp_val_norm, fd_val_norm, color_som_val_norm], axis=1).values
+#x_train = pd.concat([lbp_train_norm, fd_train_norm, color_som_train_norm], axis=1).values
+#x_test = pd.concat([lbp_val_norm, fd_val_norm, color_som_val_norm], axis=1).values
+x_train = pd.concat([lbp_train, fd_train, color_som_train], axis=1).values
+x_test = pd.concat([lbp_val, fd_val, color_som_val], axis=1).values
 
 # convert class vectors to binary class matrices (one-hot encoding)
 # there are some missing class!
@@ -114,7 +123,7 @@ model.compile(loss='categorical_crossentropy',
 history = model.fit(X_train, Y_train,
     batch_size=batch_size,
     epochs=epochs,
-    verbose=2,
+    verbose=1,
     validation_data=(X_val, Y_val),
     callbacks=[early_stopping])
 
