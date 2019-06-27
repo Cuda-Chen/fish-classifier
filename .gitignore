@@ -133,6 +133,8 @@ dmypy.json
 *.csv
 !LBP_feature_train.csv
 !LBP_feature_val.csv
+!LBP18_feature_train.csv
+!LBP18_feature_val.csv
 !color_som_train.csv
 !color_som_val.csv
 !fd_feature_train.csv
