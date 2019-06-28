@@ -1,8 +1,8 @@
 DATASET_PATH = '/home/cudachen/miat_fish_cropped' # dataset path
 
-IMAGE_SIZE = (256, 256) # wrap the input image size
+IMAGE_SIZE = (224, 224) # wrap the input image size
 
-NUM_CLASSES = 42
+NUM_CLASSES = 41
 
 BATCH_SIZE = 8
 
