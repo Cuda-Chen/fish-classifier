@@ -6,4 +6,5 @@ jupyter
 pandas
 scikit-learn
 pydot
-xgboost
+py-xgboost
+git+https://www.github.com/keras-team/keras-contrib.git

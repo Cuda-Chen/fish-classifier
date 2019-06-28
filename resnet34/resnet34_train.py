@@ -5,7 +5,7 @@ from keras.layers import Flatten, Dense, Dropout
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 #import tensorflow.keras.utils.layer_utils
-from keras_contrib.applications.resnet import ResNet34, ResNet18
+from keras_contrib.applications.resnet import ResNet34, ResNet18, ResNet50
 from fishconfig import config
 import matplotlib.pyplot as plt
 from numpy.random import seed
