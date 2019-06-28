@@ -20,7 +20,7 @@ seed(1333)
 
 batch_size = 32
 num_classes = 41 # 41
-input_size = 122 # 10 + 16 * 3 + 64
+#input_size = 122 # 10 + 16 * 3 + 64
 #input_size = 121 # 10 + 16 * 3 + (64 - 1)
 classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
@@ -71,9 +71,10 @@ fd_val_norm = (fd_val - fd_val.min()) / (fd_val.max() - fd_val.min())
 x_train = pd.concat([lbp_train, fd_train, color_som_train], axis=1).values
 x_test = pd.concat([lbp_val, fd_val, color_som_val], axis=1).values
 
+input_size = x_train.shape[1]
+
 # convert class vectors to binary class matrices (one-hot encoding)
 # there are some missing class!
-
 train_label_list = train_label['class_no'].tolist()
 onehot_train = []
 for value in train_label_list:
