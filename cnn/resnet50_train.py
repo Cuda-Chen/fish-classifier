@@ -76,8 +76,8 @@ net_final.fit_generator(train_batches,
                         validation_steps = valid_batches.samples // BATCH_SIZE,
                         epochs = NUM_EPOCHS)
 
-#score = net_final.evaluate(x_test, y_test, verbose=0)
-#print('Test loss:', score[0])
-#print('Test accuracy:', score[1])
+score = net_final.evaluate(valid_batches, steps=(valid_batches.samples / BATCH_SIZE), verbose=0)
+print('Test loss:', score[0])
+print('Test accuracy:', score[1])
 
 net_final.save(WEIGHTS_FINAL)
