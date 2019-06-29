@@ -128,7 +128,10 @@ y_pred_class = y_pred_class + 1
 #print(test_label_nparr.shape)
 #print(y_pred_class.shape)
 #print(y_pred_class.shape)
-#cm = confusion_matrix(test_label_nparr, y_pred_class, labels=classList)
+cm = confusion_matrix(test_label_nparr, y_pred_class, labels=classList)
+for i in range(41):
+    if cm[i][i] >= 3:
+        print(i + 1)
 
 #plot_confusion_matrix(test_label_nparr, y_pred_class, classes=classList,
 #                      title='Confusion matrix, without normalization')
