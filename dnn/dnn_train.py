@@ -71,13 +71,19 @@ fd_val_norm = (fd_val - fd_val.min()) / (fd_val.max() - fd_val.min())
 #x_test = pd.concat([lbp_val_norm, fd_val_norm, color_som_val_norm], axis=1).values
 x_train = pd.concat([lbp_train, fd_train, color_som_train, train_label], axis=1)
 x_test = pd.concat([lbp_val, fd_val, color_som_val, val_label], axis=1)
-
+'''
 for index in drop_list:
     x_train = x_train[x_train.class_no != index]
     x_test = x_test[x_test.class_no != index]
     train_label = train_label[train_label.class_no != index]
     val_label = val_label[val_label.class_no != index]
-
+'''
+'''
+x_train = x_train[x_train.class_no.isin(drop_list)]
+x_test = x_test[x_test.class_no.isin(drop_list)]
+train_label = train_label[train_label.class_no.isin(drop_list)]
+val_label = val_label[val_label.class_no.isin(drop_list)]
+'''
 x_train.drop(['class_no'], axis=1, inplace=True)
 x_test.drop(['class_no'], axis=1, inplace=True)
 train_onehot = pd.get_dummies(train_label['class_no'], prefix='class_no')
@@ -114,11 +120,11 @@ x_test = x_test.values
 y_test = val_onehot.values
 num_classes = train_onehot.shape[1]
 
-X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.25, random_state=42)
-#X_train = x_train
-#X_val = x_test
-#Y_train = y_train
-#Y_val = y_test
+#X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.25, random_state=42)
+X_train = x_train
+X_val = x_test
+Y_train = y_train
+Y_val = y_test
 
 # be sure of input layer!
 model = Sequential()
@@ -137,7 +143,7 @@ model.summary()
 
 model.compile(loss='categorical_crossentropy',
     optimizer=Adam(lr=learning_rate),
-    metrics=['accuracy'])
+    metrics=['accuracy', 'top_k_categorical_accuracy'])
 
 history = model.fit(X_train, Y_train,
     batch_size=batch_size,
@@ -173,6 +179,7 @@ plt.savefig('loss.svg', format='svg')
 print('test before save')
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
-print('Test accuracy:', score[1])
+print('Test Top-1 accuracy:', score[1])
+print('Test Top-5 accuracy:', score[2])
 
 #model.save('my_dnn.h5')
