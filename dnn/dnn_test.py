@@ -10,6 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
 # 41 classes
 cls_list = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
@@ -81,6 +82,13 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     fig.tight_layout()
     return ax
 
+def get_metrics(y_test, y_predicted):
+    accuracy = accuracy_score(y_test, y_predicted)
+    precision = precision_score(y_test, y_predicted, average='weighted')
+    recall = recall_score(y_test, y_predicted, average='weighted')
+    f1 = f1_score(y_test, y_predicted, average='weighted')
+    return accuracy, precision, recall, f1
+
 lbp_test = pd.read_csv('../LBP_feature_val.csv')
 fd_test = pd.read_csv('../fd_feature_val.csv')
 color_som_test = pd.read_csv('../color_som_val.csv')
@@ -117,15 +125,17 @@ for i in range(y_new.shape[0]):
 
 y_pred_class = net.predict_classes(x_test)
 y_pred_class = y_pred_class + 1
-print(test_label_nparr.shape)
-print(y_pred_class.shape)
+#print(test_label_nparr.shape)
 #print(y_pred_class.shape)
-from sklearn.metrics import confusion_matrix
+#print(y_pred_class.shape)
 #cm = confusion_matrix(test_label_nparr, y_pred_class, labels=classList)
 
-plot_confusion_matrix(test_label_nparr, y_pred_class, classes=classList,
-                      title='Confusion matrix, without normalization')
-plt.show()
+#plot_confusion_matrix(test_label_nparr, y_pred_class, classes=classList,
+#                      title='Confusion matrix, without normalization')
+#plt.show()
+#plt.savefig('confusion_matrix_dnn.svg', format='svg')
+accuracy, precision, recall, f1 = get_metrics(test_label_nparr, y_pred_class)
+print("accuracy = %.3f \nprecision = %.3f \nrecall = %.3f \nf1 = %.3f" % (accuracy, precision, recall, f1))
 '''
 pred = net.predict(x_test)[0]
 top_inds = pred.argsort()[::-1][:5]
