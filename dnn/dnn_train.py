@@ -19,7 +19,7 @@ from numpy.random import seed
 seed(1333)
 
 batch_size = 32
-num_classes = 41 # 41
+#num_classes = 41 # 41
 #input_size = 122 # 10 + 16 * 3 + 64
 #input_size = 121 # 10 + 16 * 3 + (64 - 1)
 classes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
@@ -32,6 +32,7 @@ class_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
     '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
     '31', '32', '33', '34', '35', '36', '37', '38', '39', '40',
     '41']
+drop_list = [2, 3, 5, 7, 10, 14, 21, 27, 28, 29, 30, 35, 36, 38, 39]
 epochs = 2000
 learning_rate = 1e-5
 sgb = SGD(lr=learning_rate, decay=1e-6, momentum=0.9, nesterov=True)
@@ -68,13 +69,25 @@ fd_val_norm = (fd_val - fd_val.min()) / (fd_val.max() - fd_val.min())
 # and to make sure to reshape and normalize!
 #x_train = pd.concat([lbp_train_norm, fd_train_norm, color_som_train_norm], axis=1).values
 #x_test = pd.concat([lbp_val_norm, fd_val_norm, color_som_val_norm], axis=1).values
-x_train = pd.concat([lbp_train, fd_train, color_som_train], axis=1).values
-x_test = pd.concat([lbp_val, fd_val, color_som_val], axis=1).values
+x_train = pd.concat([lbp_train, fd_train, color_som_train, train_label], axis=1)
+x_test = pd.concat([lbp_val, fd_val, color_som_val, val_label], axis=1)
+
+for index in drop_list:
+    x_train = x_train[x_train.class_no != index]
+    x_test = x_test[x_test.class_no != index]
+    train_label = train_label[train_label.class_no != index]
+    val_label = val_label[val_label.class_no != index]
+
+x_train.drop(['class_no'], axis=1, inplace=True)
+x_test.drop(['class_no'], axis=1, inplace=True)
+train_onehot = pd.get_dummies(train_label['class_no'], prefix='class_no')
+val_onehot = pd.get_dummies(val_label['class_no'], prefix='class_no')
 
 input_size = x_train.shape[1]
 
 # convert class vectors to binary class matrices (one-hot encoding)
 # there are some missing class!
+'''
 train_label_list = train_label['class_no'].tolist()
 onehot_train = []
 for value in train_label_list:
@@ -90,11 +103,16 @@ for value in val_label_list:
     class_id[value - 1] = 1
     onehot_val.append(class_id)
 y_test = pd.DataFrame(onehot_val)
-
+'''
 '''
 y_train = train_label.values
 y_test = val_label.values
 '''
+x_train = x_train.values
+y_train = train_onehot.values
+x_test = x_test.values
+y_test = val_onehot.values
+num_classes = train_onehot.shape[1]
 
 X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.25, random_state=42)
 #X_train = x_train
@@ -127,7 +145,7 @@ history = model.fit(X_train, Y_train,
     verbose=1,
     validation_data=(X_val, Y_val),
     callbacks=[early_stopping])
-
+'''
 # plot training & validation accuracy values
 plt.plot(history.history['acc'])
 plt.plot(history.history['val_acc'])
@@ -151,7 +169,7 @@ plt.legend(['Train', 'Test'], loc='upper left')
 plt.grid(linestyle='dotted')
 #plt.show()
 plt.savefig('loss.svg', format='svg')
-
+'''
 print('test before save')
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
