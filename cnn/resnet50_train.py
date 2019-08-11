@@ -10,6 +10,7 @@ from fishconfig import config
 from argparse import ArgumentParser
 import numpy as np
 from numpy.random import seed
+import matplotlib.pyplot as plt
 seed(1033)
 '''
 parser = ArgumentParser()
@@ -48,6 +49,14 @@ train_batches = train_datagen.flow_from_directory(DATASET_PATH + '/train',
                                                   class_mode='categorical',
                                                   shuffle=True,
                                                   batch_size=BATCH_SIZE)
+
+train_datagen_ref = ImageDataGenerator()
+train_batches_ref = train_datagen_ref.flow_from_directory(DATASET_PATH + '/train',
+                                                          target_size=IMAGE_SIZE,
+                                                          interpolation='bicubic',
+                                                          class_mode='categorical',
+                                                          shuffle=True,
+                                                          batch_size=BATCH_SIZE)
 
 #valid_datagen = ImageDataGenerator(rescale=1./255)
 valid_datagen = ImageDataGenerator()
@@ -103,14 +112,31 @@ print(net_final.summary())
 print('train samples:', train_batches.samples)
 print('validation samples:', valid_batches.samples)
 #print('test samples:', test_batches.samples)
-
-net_final.fit_generator(train_batches,
+print('train with data augmentation')
+history = net_final.fit_generator(train_batches,
                         steps_per_epoch = train_batches.samples // BATCH_SIZE,
                         validation_data = valid_batches,
                         validation_steps = valid_batches.samples // BATCH_SIZE,
                         epochs = NUM_EPOCHS,
                         callbacks=[earlyStopping])
-
+print('train plain')
+history_ref = net_final.fit_generator(train_batches_ref,
+                        steps_per_epoch = train_batches.samples // BATCH_SIZE,
+                        validation_data = valid_batches,
+                        validation_steps = valid_batches.samples // BATCH_SIZE,
+                        epochs = NUM_EPOCHS,
+                        callbacks=[earlyStopping])
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.plot(history_ref.history['acc'])
+plt.plot(history_ref.history['val_acc'])
+plt.title('data augmentation vs no data augmentation')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test', 'train_ref', 'test_ref'], loc='upper left')
+#plt.show()
+plt.savefig('foo.png')
+'''
 score = net_final.evaluate(valid_batches, steps=(valid_batches.samples / BATCH_SIZE), verbose=0)
 print('Test loss:', score[0])
 print('Test top-1 accuracy:', score[1])
@@ -138,3 +164,4 @@ for i in top_inds:
 
 net_final.save(WEIGHTS_FINAL)
 #np.savetxt(str(args.seed), score, fmt='%1.4f')
+'''
