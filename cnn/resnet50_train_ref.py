@@ -28,27 +28,13 @@ NUM_EPOCHS = config.NUM_EPOCHS
 WEIGHTS_FINAL = 'model-resnet50-final.h5'
 earlyStopping = EarlyStopping(monitor='val_loss', patience=100)
 
-# data agumentation
-
-train_datagen = ImageDataGenerator(rotation_range=90,
-                                   width_shift_range=0.2,
-                                   height_shift_range=0.2,
-                                   shear_range=0.2,
-                                   zoom_range=0.2,
-                                   channel_shift_range=10,
-                                   #validation_split=0.25,
-                                   horizontal_flip=True,
-                                   vertical_flip=True,
-                                   fill_mode='nearest')
-'''
-train_datagen = ImageDataGenerator()
-'''
-train_batches = train_datagen.flow_from_directory(DATASET_PATH + '/train',
-                                                  target_size=IMAGE_SIZE,
-                                                  interpolation='bicubic',
-                                                  class_mode='categorical',
-                                                  shuffle=True,
-                                                  batch_size=BATCH_SIZE)
+train_datagen_ref = ImageDataGenerator()
+train_batches_ref = train_datagen_ref.flow_from_directory(DATASET_PATH + '/train',
+                                                          target_size=IMAGE_SIZE,
+                                                          interpolation='bicubic',
+                                                          class_mode='categorical',
+                                                          shuffle=True,
+                                                          batch_size=BATCH_SIZE)
 
 #valid_datagen = ImageDataGenerator(rescale=1./255)
 valid_datagen = ImageDataGenerator()
@@ -70,7 +56,7 @@ test_batches = test_datagen.flow_from_directory(DATASET_PATH + '/val',
                                                 batch_size=BATCH_SIZE)
 '''
 # output the index number of each class
-for cls, idx in train_batches.class_indices.items():
+for cls, idx in train_batches_ref.class_indices.items():
     print('Class #{} = {}'.format(idx, cls))
 
 # use pretrained resnet50 and drop the last fully connected layer
@@ -101,37 +87,33 @@ net_final.compile(optimizer=Adam(lr=1e-5),
 
 print(net_final.summary())
 
-print('train samples:', train_batches.samples)
+print('train_ref samples:', train_batches_ref.samples)
 print('validation samples:', valid_batches.samples)
 #print('test samples:', test_batches.samples)
-
-print('train with data augmentation')
-history = net_final.fit_generator(train_batches,
-                        steps_per_epoch = train_batches.samples // BATCH_SIZE,
+print('train plain')
+history_ref = net_final.fit_generator(train_batches_ref,
+                        steps_per_epoch = train_batches_ref.samples // BATCH_SIZE,
                         validation_data = valid_batches,
                         validation_steps = valid_batches.samples // BATCH_SIZE,
                         epochs = NUM_EPOCHS,
                         callbacks=[earlyStopping])
 
-#plt.plot(history.history['acc'])
-#plt.plot(history.history['val_acc'])
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('top-1 accuracy curve with data augmentation')
+plt.plot(history_ref.history['acc'])
+plt.plot(history_ref.history['val_acc'])
+plt.title('Top-1 accuracy curve without data augmentation')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
 plt.grid()
-plt.savefig('top1_accuracy.svg')
+plt.savefig('top1_accuracy_ref.svg')
 
 plt.clf()
 
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('loss curve with data augmentation')
+plt.plot(history_ref.history['loss'])
+plt.plot(history_ref.history['val_loss'])
+plt.title('Loss curve without data augmentation')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='lower right')
 plt.grid()
-plt.savefig('loss.svg')
-#net_final.save(WEIGHTS_FINAL)
+plt.savefig('loss_ref.svg')
